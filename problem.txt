@@ -1,0 +1,41 @@
+1. List Index Out of Range Error
+Problem: FAISS similarity search returned empty results, causing the QA chain to fail when trying to access docs[0].
+
+Solutions Applied:
+
+Added check for empty faiss_index directory before loading
+Added validation to check if similarity_search() returns empty results
+Added user-friendly warnings when no documents are found
+
+
+429 You exceeded your current quota
+Quota exceeded for metric: generativelanguage.googleapis.com/embed_content_free_tier_requests
+
+Added local embedding option using HuggingFace's sentence-transformers/all-MiniLM-L6-v2
+Implemented environment variable USE_LOCAL_EMBEDDINGS=true to bypass Google API quota limits
+Added try-catch blocks with helpful error messages guiding users to enable billing or switch to local embeddings
+Ensured same embedding model is used for both creating and loading the index
+
+
+The de-serialization relies loading a pickle file. Pickle files can be modified to deliver a malicious payload...
+You will need to set allow_dangerous_deserialization to True
+
+Added TRUST_FAISS_INDEX environment variable as a safety gate
+Implemented conditional loading with allow_dangerous_deserialization=True only when explicitly trusted
+Added fallback error handling with clear instructions for users
+Provided guidance to delete and rebuild index if trust is uncertain
+
+
+api to 2.5flash
+
+GOOGLE_API_KEY=your_api_key_here
+USE_LOCAL_EMBEDDINGS=true
+TRUST_FAISS_INDEX=true
+
+
+Key Features Added
+Robust Error Handling: Every API call wrapped in try-catch with user-friendly messages
+Flexible Embedding Options: Can switch between Google API and local models
+Security Controls: Explicit trust requirement for pickle deserialization
+User Guidance: Clear instructions when errors occur
+Empty Result Handling: Graceful handling of no-document scenarios
